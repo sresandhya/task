@@ -5,7 +5,7 @@ function App() {
   const [tasks, setTasks] = useState([]);
 
   const getTasks = async () => {
-    const response = await fetch("http://localhost:5000/tasks");
+    const response = await fetch("https://task-backend-seven-topaz.vercel.app/tasks");
     const data = await response.json();
     setTasks(data);
   };
@@ -13,7 +13,7 @@ function App() {
   const addTask = async () => {
     if (!title.trim()) return;
 
-    await fetch("http://localhost:5000/tasks", {
+    await fetch("https://task-backend-seven-topaz.vercel.app/tasks", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
