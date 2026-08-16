@@ -9,24 +9,24 @@ app.use(cors());
 app.use(express.json());
 
 const pool = new Pool({
-  user: process.env.DB_USER,
-  host: process.env.DB_HOST,
-  database: process.env.DB_NAME,
-  password: process.env.DB_PASSWORD,
-  port: process.env.DB_PORT,
+    connectionString: process.env.DATABASE_URL,
+    ssl: {
+        rejectUnauthorized: false
+    }
 });
 
-// Get tasks
 app.get("/tasks", async (req, res) => {
   try {
-    const result = await pool.query("SELECT * FROM tasks ORDER BY id DESC");
+    const result = await pool.query(
+      "SELECT * FROM tasks ORDER BY id DESC"
+    );
+
     res.json(result.rows);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 });
 
-// Add task
 app.post("/tasks", async (req, res) => {
   try {
     const { title } = req.body;
@@ -42,6 +42,10 @@ app.post("/tasks", async (req, res) => {
   }
 });
 
-app.listen(5000, () => {
-  console.log("Server running on port 5000");
-});
+if (process.env.NODE_ENV !== "production") {
+    app.listen(5000, () => {
+        console.log("Server running on http://localhost:5000");
+    });
+}
+
+module.exports = app;
